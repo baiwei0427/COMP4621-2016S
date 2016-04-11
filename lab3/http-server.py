@@ -48,10 +48,19 @@ class ServerThread(threading.Thread):
 			self.socket.close()
 			return
 		
-		body = error_message(path)
-		header = http_header('404 Not Found', len(body))
-		self.socket.sendall(header+body)
-		self.socket.close()
+		try:
+			# find the requested file from current directory (./)
+			f = open('.'+path, 'r')
+			body = f.read()
+			f.close()
+			header = http_header('200 OK', len(body))
+			self.socket.sendall(header+body)
+			self.socket.close()
+		except:
+			body = error_message(path)
+			header = http_header('404 Not Found', len(body))
+			self.socket.sendall(header+body)
+			self.socket.close()
 
 # create a socket object using TCP (SOCK_STREAM) as the transport protocol
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
