@@ -92,10 +92,10 @@ class ServerThread(threading.Thread):
 			type = path_to_type(path)
 			
 			# find the requested file from current directory (./)				
-			f = open('.'+path, 'r')
+			f = open('.'+path, 'rb')
 			body = f.read()
 			f.close()
-							
+
 			if enable_gzip:
 				body = gzip_compress(body)
 				header = http_header('200 OK', type, len(body), 'gzip')
